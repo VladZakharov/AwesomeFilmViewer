@@ -7,6 +7,8 @@ import {
 import {selectAllFilms, selectFilmsState} from '../store/selectors';
 import {FilmList} from '../components';
 import {DataState} from '../support';
+import {Navigation} from 'react-native-navigation';
+import {FilmModel} from '../model';
 
 export const MainScreen = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,17 @@ export const MainScreen = () => {
     dispatch(refreshFilmsAction());
   }, []);
 
+  const onFilmPress = useCallback((data: FilmModel) => {
+    Navigation.showOverlay({
+      component: {
+        name: 'BottomPanel',
+        passProps: {
+          data,
+        },
+      },
+    });
+  }, []);
+
   useEffect(() => {
     loadFilms();
   }, []);
@@ -31,6 +44,7 @@ export const MainScreen = () => {
       refreshing={state === DataState.Refreshing}
       loading={state === DataState.Loading}
       onRefresh={refreshFilms}
+      onItemPress={onFilmPress}
     />
   );
 };
@@ -40,8 +54,5 @@ MainScreen.options = {
     title: {
       text: 'Главная',
     },
-  },
-  bottomTab: {
-    text: 'Главная',
   },
 };

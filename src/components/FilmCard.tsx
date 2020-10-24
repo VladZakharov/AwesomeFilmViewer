@@ -8,6 +8,7 @@ import {addToFavorites, removeFromFavorites} from '../store/slice';
 
 interface Props {
   data: FilmModel;
+  onPress?: (data: FilmModel) => void;
 }
 
 export const FilmCard = (props: Props) => {
@@ -30,9 +31,15 @@ export const FilmCard = (props: Props) => {
     setExpanded((e) => !e);
   }, []);
 
+  const onPress = useCallback(() => {
+    if (props.onPress) {
+      props.onPress(props.data);
+    }
+  }, [props.onPress, props.data]);
+
   const data = props.data;
   return (
-    <View style={SS.container}>
+    <TouchableOpacity onPress={onPress} activeOpacity={1} style={SS.container}>
       <View style={SS.header}>
         <Text style={SS.title}>
           {data.title}
@@ -59,7 +66,7 @@ export const FilmCard = (props: Props) => {
           <Text style={SS.subtext}>{expanded ? 'Свернуть' : 'Развернуть'}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -15,7 +15,4 @@ FavoriteScreen.options = {
       text: 'Избранное',
     },
   },
-  bottomTab: {
-    text: 'Избранное',
-  },
 };

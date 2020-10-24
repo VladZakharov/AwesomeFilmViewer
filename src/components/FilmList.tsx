@@ -13,6 +13,7 @@ import {FilmCard} from './FilmCard';
 
 interface Props
   extends Pick<FlatListProps<FilmModel>, 'data' | 'refreshing' | 'onRefresh'> {
+  onItemPress?: (item: FilmModel) => void;
   loading?: boolean;
   error?: boolean;
 }
@@ -20,9 +21,9 @@ interface Props
 export const FilmList = (props: Props) => {
   const renderFilmCard = useCallback(
     ({item}: ListRenderItemInfo<FilmModel>) => {
-      return <FilmCard data={item} />;
+      return <FilmCard data={item} onPress={props.onItemPress} />;
     },
-    [],
+    [props.onItemPress],
   );
 
   const ListEmptyComponent = useCallback(() => {
@@ -49,7 +50,7 @@ export const FilmList = (props: Props) => {
 
   return (
     <FlatList
-      contentContainerStyle={{flexGrow:1}}
+      contentContainerStyle={SS.contentContainer}
       ListEmptyComponent={ListEmptyComponent}
       data={props.data}
       refreshing={props.refreshing}
@@ -57,11 +58,17 @@ export const FilmList = (props: Props) => {
       renderItem={renderFilmCard}
       showsVerticalScrollIndicator={false}
       keyExtractor={(item) => item.id}
+      initialNumToRender={50}
+      removeClippedSubviews={true}
+      windowSize={31}
     />
   );
 };
 
 const SS = StyleSheet.create({
+  contentContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
