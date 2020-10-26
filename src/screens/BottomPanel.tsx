@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {FilmModel} from '../model';
+
+const PANEL_HEIGHT = 300;
 
 interface Props {
   data: FilmModel;
@@ -17,9 +19,19 @@ export const BottomPanel: NavigationFunctionComponent<Props> = ({
 
   const bottomPanel = useCallback(() => {
     return (
-      <View
-        style={{backgroundColor: 'red', height: 300}}>
-        <Text>{data.title}</Text>
+      <View style={SS.panel}>
+        <ScrollView
+          alwaysBounceVertical={false}
+          contentContainerStyle={SS.contentContainer}
+          showsVerticalScrollIndicator={false}>
+          <Text style={SS.title}>{data.title}</Text>
+          <Text style={SS.text}>{`Директор: ${data.director}`}</Text>
+          <Text style={SS.text}>{`Продюсер: ${data.producer}`}</Text>
+          <Text style={SS.text}>{`Год выхода: ${data.release_date}`}</Text>
+          <Text
+            style={SS.text}>{`Оценка пользователей: ${data.rt_score}`}</Text>
+          <Text style={SS.text}>{`Описание: ${data.description}`}</Text>
+        </ScrollView>
       </View>
     );
   }, []);
@@ -54,7 +66,7 @@ export const BottomPanel: NavigationFunctionComponent<Props> = ({
       />
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[300, 0]}
+        snapPoints={[PANEL_HEIGHT, 0]}
         initialSnap={1}
         borderRadius={10}
         renderContent={bottomPanel}
@@ -77,6 +89,24 @@ const SS = StyleSheet.create({
     right: 0,
     flex: 1,
     backgroundColor: 'black',
+  },
+  panel: {
+    backgroundColor: 'white',
+    height: PANEL_HEIGHT,
+  },
+  contentContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  text: {
+    fontSize: 14,
+    color: 'black',
+    marginVertical: 4,
   },
 });
 

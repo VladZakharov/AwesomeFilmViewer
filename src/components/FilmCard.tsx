@@ -26,6 +26,7 @@ export const FilmCard = (props: Props) => {
   }, [props.data.id, isFavorite]);
 
   const [expanded, setExpanded] = useState(false);
+  const [isCollapsible, setIsCollapsible] = useState(false);
 
   const toggle = useCallback(() => {
     setExpanded((e) => !e);
@@ -37,13 +38,25 @@ export const FilmCard = (props: Props) => {
     }
   }, [props.onPress, props.data]);
 
+  const onTextLayout = useCallback((e) => {
+    const {lines} = e.nativeEvent;
+    if (lines.length === 3) {
+      const l1 = lines[0].width / lines[0].text.length;
+      const l2 = lines[1].width / lines[1].text.length;
+      const l3 = lines[2].width / lines[2].text.length;
+      if (Math.min(l1, l2) - l3 > 0) {
+        setIsCollapsible(true);
+      }
+    }
+  }, []);
+
   const data = props.data;
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={1} style={SS.container}>
       <View style={SS.header}>
         <Text style={SS.title}>
           {data.title}
-          <Text style={SS.smallText}>{` (${data.release_date})`}</Text>
+          <Text style={SS.smallText}>{` (${data.release_date}г.)`}</Text>
         </Text>
         <TouchableOpacity onPress={onStarPress} style={SS.icon}>
           {isFavorite ? (
@@ -55,16 +68,20 @@ export const FilmCard = (props: Props) => {
       </View>
       <Text style={SS.smallText}>{`Рейтинг: ${data.rt_score}`}</Text>
 
-      <View style={{alignItems: 'flex-start'}}>
+      <View style={SS.descriptionBlock}>
         <Text
           numberOfLines={expanded ? undefined : 3}
-          // onTextLayout={e => console.warn(e.nativeEvent)}
+          onTextLayout={onTextLayout}
           style={SS.description}>
           {data.description}
         </Text>
-        <TouchableOpacity onPress={toggle}>
-          <Text style={SS.subtext}>{expanded ? 'Свернуть' : 'Развернуть'}</Text>
-        </TouchableOpacity>
+        {isCollapsible && (
+          <TouchableOpacity onPress={toggle}>
+            <Text style={SS.subtext}>
+              {expanded ? 'Свернуть' : 'Развернуть'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -91,17 +108,19 @@ const SS = StyleSheet.create({
     fontWeight: 'normal',
     color: 'grey',
   },
+  descriptionBlock: {
+    alignItems: 'flex-start',
+  },
   description: {
     flexShrink: 1,
     fontSize: 14,
-    fontWeight: 'normal',
-    color: 'red',
+    color: 'black',
   },
   subtext: {
     flexShrink: 1,
     fontSize: 14,
     fontWeight: 'normal',
-    color: 'black',
+    color: '#3171f8',
   },
   icon: {
     margin: 5,

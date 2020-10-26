@@ -23,7 +23,7 @@ export const FilmList = (props: Props) => {
     ({item}: ListRenderItemInfo<FilmModel>) => {
       return <FilmCard data={item} onPress={props.onItemPress} />;
     },
-    [props.onItemPress],
+    [],
   );
 
   const ListEmptyComponent = useCallback(() => {

@@ -27,9 +27,7 @@ export const MainScreen = () => {
     Navigation.showOverlay({
       component: {
         name: 'BottomPanel',
-        passProps: {
-          data,
-        },
+        passProps: {data},
       },
     });
   }, []);
