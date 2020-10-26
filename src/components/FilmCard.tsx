@@ -18,11 +18,13 @@ export const FilmCard = (props: Props) => {
   );
 
   const onStarPress = useCallback(() => {
-    if (isFavorite) {
-      dispatch(removeFromFavorites(props.data.id));
-    } else {
-      dispatch(addToFavorites(props.data.id));
-    }
+    requestAnimationFrame(() => {
+      if (isFavorite) {
+        dispatch(removeFromFavorites(props.data.id));
+      } else {
+        dispatch(addToFavorites(props.data.id));
+      }
+    });
   }, [props.data.id, isFavorite]);
 
   const [expanded, setExpanded] = useState(false);
@@ -40,11 +42,14 @@ export const FilmCard = (props: Props) => {
 
   const onTextLayout = useCallback((e) => {
     const {lines} = e.nativeEvent;
+    if (lines.length > 3) {
+      setIsCollapsible(true);
+    }
     if (lines.length === 3) {
       const l1 = lines[0].width / lines[0].text.length;
       const l2 = lines[1].width / lines[1].text.length;
       const l3 = lines[2].width / lines[2].text.length;
-      if (Math.min(l1, l2) - l3 > 0) {
+      if (Math.min(l1, l2) / l3 > 1.1) {
         setIsCollapsible(true);
       }
     }

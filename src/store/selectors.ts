@@ -1,6 +1,6 @@
 import {RootState} from './reducer';
 import {FilmModel} from '../model';
-import {DataState} from '../support/types';
+import {DataState} from '../support';
 
 export const selectAllFilms = ({filmsReducer}: RootState): FilmModel[] =>
   filmsReducer.all;
@@ -17,4 +17,4 @@ export const selectFavoriteFilms = ({
 export const selectFilmsIsFavorite = (
   {filmsReducer}: RootState,
   filmId: string,
-): boolean => filmsReducer.favorites_id.some((id) => id === filmId);
+): boolean => filmsReducer.favorites_id.indexOf(filmId) !== -1;
